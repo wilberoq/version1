@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <title>index</title>
+  <meta name="description" content="website description" />
+  <meta name="keywords" content="website keywords, website keywords" />
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <!-- hoja de estilo -->
+  <link href="css/style.css" rel="stylesheet" type="text/css" />
+  <link href="css/colour.css" rel="stylesheet" type="text/css" />
+  <!-- permite modernizar los elementos HTML5 y detecta la característica -->
+  <script type="text/javascript" src="js/modernizr-1.5.min.js"></script>
+</head>
+
+<body>
+  <div id="main">
+
+    <!-- inicio de encavesamiento -->
+    <header>
+      <div id="logo"><h1>JUEGO<a href="#"> DE</a>NAVES</h1></div>
+      <nav>
+        <ul class="sf-menu" id="nav">
+          <li class="selected"><a href="index.html">Principal</a></li>
+          <li><a href="controles.html">Ver Controles</a></li>
+          <li><a href="#">Mis Puntuciones</a>
+            <ul>
+              <li><a href="puntuacionG.html">puntuaciones general </a></li>
+              <li><a href="puntuacionA.html"> puntuaciones actuales</a></li>
+            </ul>
+          </li>
+          <li><a href="salir.html1">    </a></li>
+          <li><a href="iniciar/index.html">Inicair Juego</a></li>
+        </ul>
+      </nav>
+    </header>
+    <!-- fin del encavezamiento -->
+
+    <!-- comienzo del contenido -->
+    <div id="site_content">
+      <ul class="slideshow">
+        <li class="show"></li>
+        <li><img width="950" height="450" src="images/home_2.jpg" alt="&quot;bienvenido a nuestra pagina de juego de nave.&quot;" /></li> 
+        <li></li>
+      </ul>
+    </div>
+    <!-- fin del contenido -->
+    
+
+  </div>
+  <!-- javascript at the bottom for fast page loading -->
+  <script type="text/javascript" src="js/jquery.min.js"></script>
+  <script type="text/javascript" src="js/jquery.easing-sooper.js"></script>
+  <script type="text/javascript" src="js/jquery.sooperfish.js"></script>
+  <script type="text/javascript" src="js/image_fade.js"></script>
+  <!-- initialise sooperfish menu -->
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('ul.sf-menu').sooperfish();
+    });
+  </script>
+  
+</body>
+</html>
