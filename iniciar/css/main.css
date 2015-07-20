@@ -1,0 +1,44 @@
+body {
+    background: #999;
+    color: #333;
+    font: 16px 'Arial',sans-serif;
+    text-align: center;
+}
+a {
+    color: #506e2f;
+    text-decoration: none;
+}
+a:hover {
+    color: #ff4500;
+}
+div.contenedor {
+    width: 100%;
+    margin: 0 auto;
+}
+div.izquierda, div.derecha {
+    width: 300px;
+}
+div.izquierda {
+    float: left;
+    text-align: left;
+}
+div.juego {
+
+}
+div.juego canvas {
+    box-shadow: 0 0 30px #000;
+}
+div.derecha {
+    float: right;
+}
+div.derecha h3.tituloPuntuaciones {
+    background: url("../images/medalla.png") no-repeat left;
+    padding: 10px;
+}
+div.derecha ul#puntuaciones {
+    width: 300px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
