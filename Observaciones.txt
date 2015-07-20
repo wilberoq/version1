@@ -6,3 +6,7 @@ noooooooooo
 siiiiiiiii
 
 - Si sigue fallando va a desaprobar
+
+OBSERVACINES TERCER AVANCE
+-------------------------------------------------------
+- Va bien, no olvide que los commits son abundantes y significativos
