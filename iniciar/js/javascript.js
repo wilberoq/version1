@@ -128,9 +128,75 @@ var game = (function () {
         }
         anim();
     }
+// funcion  para vidas y espectacuos del nave
 
+	function showLifeAndScore () {
+        bufferctx.fillStyle="rgb(59,59,59)";
+        bufferctx.font="bold 16px Arial";
+        bufferctx.fillText("Puntos: " + player.score, canvas.width - 100, 20);
+        bufferctx.fillText("Vidas: " + player.life, canvas.width - 100,40);
+    }
 
-	
+    function getRandomNumber(range) {
+        return Math.floor(Math.random() * range);
+    }
+         ///funcion jugador (vida y puntuacion)
+    function Player(life, score) {  //La vida del jugador, la puntuación
+        var settings = {
+            marginBottom : 10,
+            defaultHeight : 66
+        };
+        player = new Image();
+        player.src = 'images/bueno.png'; // imagen del nave bueno
+        player.posX = (canvas.width / 2) - (player.width / 2);
+        player.posY = canvas.height - (player.height == 0 ? settings.defaultHeight : player.height) - settings.marginBottom;
+        player.life = life;
+        player.score = score;
+        player.dead = false;
+        player.speed = playerSpeed;
+
+        var shoot = function () {
+            if (nextPlayerShot < now || now == 0) {
+                playerShot = new PlayerShot(player.posX + (player.width / 2) - 5 , player.posY);
+                playerShot.add();
+                now += playerShotDelay; // retraso del jugador  al disparar
+                nextPlayerShot = now + playerShotDelay; //siguiente disparo del jugador
+            } else {
+                now = new Date().getTime();
+            }
+        };
+
+        player.doAnything = function() {
+            if (player.dead)
+                return;
+            if (keyPressed.left && player.posX > 5)
+                player.posX -= player.speed;
+            if (keyPressed.right && player.posX < (canvas.width - player.width - 5))
+                player.posX += player.speed;
+            if (keyPressed.fire)
+                shoot();
+        };
+
+        player.killPlayer = function() {  // kill= matar
+            if (this.life > 0) {
+                this.dead = true;
+                evilShotsBuffer.splice(0, evilShotsBuffer.length);
+                playerShotsBuffer.splice(0, playerShotsBuffer.length);
+                this.src = playerKilledImage.src;
+                createNewEvil(); // crear nuevo mal
+                setTimeout(function () {
+                    player = new Player(player.life - 1, player.score);
+                }, 500);
+                          // caso contrario tu pierdes
+            } else {
+                saveFinalScore();
+                youLoose = true;  
+            }
+        };
+
+        return player;
+    }
+
 	
 	
 	////////////terminacion de var game fuction
