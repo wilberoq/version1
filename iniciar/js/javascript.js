@@ -62,19 +62,74 @@ var game = (function () {
         },
         keyPressed = {},
         keyMap = {
-            left: 37,
-            right: 39,
+            left: 37,    //tecla izquierdo
+            right: 39,   //tecla derecho
             fire: 32     // tecla espacio
         },
-        nextPlayerShot = 0,
-        playerShotDelay = 250,
+        nextPlayerShot = 0,  // siguiente Disparo jugador
+        playerShotDelay = 250,  //jugador Disparo Retardo
         now = 0;
 
     function loop() {
         update();
         draw();
     }
-	
+	function preloadImages () {   // funcion para precarga de Imágenes y agregando imagenes para el juego
+        for (var i = 1; i <= 8; i++) {
+            var evilImage = new Image();
+            evilImage.src = 'images/malo' + i + '.png';// 
+            evilImages.animation[i-1] = evilImage;
+            var bossImage = new Image();
+            bossImage.src = 'images/jefe' + i + '.png';
+            bossImages.animation[i-1] = bossImage; // jefe imagen animacio = jefe imagen 
+        }
+        evilImages.killed.src = 'images/malo_muerto.png';
+        bossImages.killed.src = 'images/jefe_muerto.png';
+        bgMain = new Image();
+        bgMain.src = 'images/fondovertical.png';  //imagen vertical
+        bgBoss = new Image();
+        bgBoss.src = 'images/fondovertical_jefe.png'; //fondo vertical jefe
+        playerShotImage = new Image(); // disparo de imageen = nuevo imagen
+        playerShotImage.src = 'images/disparo_bueno.png';  /// disparo del imagen =disparo_bueno.png
+        evilShotImage = new Image();  ////mal disparo imagen =nuevo imagen
+        evilShotImage.src = 'images/disparo_malo.png'; // tma el mal imagen
+        playerKilledImage = new Image();    //imagen de jugador asicinado =nuevo jugador
+        playerKilledImage.src = 'images/bueno_muerto.png';//jugador asisinado =al imagen bueno_muerto.png
+
+    }
+	// funcion inicial
+
+    function init() {
+
+        preloadImages(); // precarga del imagen
+
+        showBestScores();
+
+        canvas = document.getElementById('canvas');  //obtiene elemento byid
+        ctx = canvas.getContext("2d");
+
+        buffer = document.createElement('canvas');
+        buffer.width = canvas.width;
+        buffer.height = canvas.height;
+        bufferctx = buffer.getContext('2d');
+
+        player = new Player(playerLife, 0);
+        evilCounter = 1;
+        createNewEvil();
+
+        showLifeAndScore();
+
+        addListener(document, 'keydown', keyDown);
+        addListener(document, 'keyup', keyUp);
+
+        function anim () {
+            loop();
+            requestAnimFrame(anim);
+        }
+        anim();
+    }
+
+
 	
 	
 	
