@@ -196,7 +196,44 @@ var game = (function () {
 
         return player;
     }
+  //,,,,,,,,,,,,,,,,,,,,,,,,,,,,, esto es la funcion de disparos ,,,,,,,,,,,,,,
+   function Shot( x, y, array, img) {
+        this.posX = x;
+        this.posY = y;
+        this.image = img;
+        this.speed = shotSpeed;
+        this.identifier = 0;
+        this.add = function () {
+            array.push(this);
+        };
+        this.deleteShot = function (idendificador) {
+            arrayRemove(array, idendificador);
+        };
+    }
 
+    function PlayerShot (x, y) {
+        Object.getPrototypeOf(PlayerShot.prototype).constructor.call(this, x, y, playerShotsBuffer, playerShotImage);
+        this.isHittingEvil = function() {
+            return (!evil.dead && this.posX >= evil.posX && this.posX <= (evil.posX + evil.image.width) &&
+                this.posY >= evil.posY && this.posY <= (evil.posY + evil.image.height));
+        };
+    }
+
+    PlayerShot.prototype = Object.create(Shot.prototype);
+    PlayerShot.prototype.constructor = PlayerShot;
+
+    function EvilShot (x, y) {
+        Object.getPrototypeOf(EvilShot.prototype).constructor.call(this, x, y, evilShotsBuffer, evilShotImage);
+        this.isHittingPlayer = function() {
+            return (this.posX >= player.posX && this.posX <= (player.posX + player.width)
+                && this.posY >= player.posY && this.posY <= (player.posY + player.height));
+        };
+    }
+
+    EvilShot.prototype = Object.create(Shot.prototype);
+    EvilShot.prototype.constructor = EvilShot;
+	
+	//// fin de la funcion disparos,,,,,,,,,,,,,,,,,,,,,
 	
 	
 	////////////terminacion de var game fuction
