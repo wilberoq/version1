@@ -235,6 +235,105 @@ var game = (function () {
 	
 	//// fin de la funcion disparos,,,,,,,,,,,,,,,,,,,,,
 	
+	//// esto es a funcion de enemigossssssssss//////////
+	function Enemy(life, shots, enemyImages) {
+        this.image = enemyImages.animation[0];
+        this.imageNumber = 1;
+        this.animation = 0;
+        this.posX = getRandomNumber(canvas.width - this.image.width);
+        this.posY = -50;
+        this.life = life ? life : evilLife;
+        this.speed = evilSpeed;
+        this.shots = shots ? shots : evilShots;
+        this.dead = false;
+
+        var desplazamientoHorizontal = minHorizontalOffset +
+            getRandomNumber(maxHorizontalOffset - minHorizontalOffset);
+        this.minX = getRandomNumber(canvas.width - desplazamientoHorizontal);
+        this.maxX = this.minX + desplazamientoHorizontal - 40;
+        this.direction = 'D';
+
+
+        this.kill = function() {
+            this.dead = true;
+            totalEvils --;
+            this.image = enemyImages.killed;
+            verifyToCreateNewEvil();
+        };
+
+        this.update = function () {
+            this.posY += this.goDownSpeed;
+            if (this.direction === 'D') {
+                if (this.posX <= this.maxX) {
+                    this.posX += this.speed;
+                } else {
+                    this.direction = 'I';
+                    this.posX -= this.speed;
+                }
+            } else {
+                if (this.posX >= this.minX) {
+                    this.posX -= this.speed;
+                } else {
+                    this.direction = 'D';
+                    this.posX += this.speed;
+                }
+            }
+            this.animation++;
+            if (this.animation > 5) {
+                this.animation = 0;
+                this.imageNumber ++;
+                if (this.imageNumber > 8) {
+                    this.imageNumber = 1;
+                }
+                this.image = enemyImages.animation[this.imageNumber - 1];
+            }
+        };
+
+        this.isOutOfScreen = function() {
+            return this.posY > (canvas.height + 15);
+        };
+
+        function shoot() {
+            if (evil.shots > 0 && !evil.dead) {
+                var disparo = new EvilShot(evil.posX + (evil.image.width / 2) - 5 , evil.posY + evil.image.height);
+                disparo.add();
+                evil.shots --;
+                setTimeout(function() {
+                    shoot();
+                }, getRandomNumber(3000));
+            }
+        }
+        setTimeout(function() {
+            shoot();
+        }, 1000 + getRandomNumber(2500));
+
+        this.toString = function () {
+            return 'Enemigo con vidas:' + this.life + 'shotss: ' + this.shots + ' puntos por matar: ' + this.pointsToKill;
+        }
+
+    }
+
+    function Evil (vidas, disparos) {
+        Object.getPrototypeOf(Evil.prototype).constructor.call(this, vidas, disparos, evilImages);
+        this.goDownSpeed = evilSpeed;
+        this.pointsToKill = 5 + evilCounter;
+    }
+
+    Evil.prototype = Object.create(Enemy.prototype);
+    Evil.prototype.constructor = Evil;
+
+    function FinalBoss () {
+        Object.getPrototypeOf(FinalBoss.prototype).constructor.call(this, finalBossLife, finalBossShots, bossImages);
+        this.goDownSpeed = evilSpeed/2;
+        this.pointsToKill = 20;
+    }
+
+    FinalBoss.prototype = Object.create(Enemy.prototype);
+    FinalBoss.prototype.constructor = FinalBoss;
+
+	
+	// ...................... fin de enemigossssssss,,,,,,,,,,,,,,,,,
+	
 	
 	////////////terminacion de var game fuction
 	return {
