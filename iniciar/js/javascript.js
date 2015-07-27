@@ -334,6 +334,298 @@ var game = (function () {
 	
 	// ...................... fin de enemigossssssss,,,,,,,,,,,,,,,,,
 	
+	//funcion para crear nuevo malo para verificar
+	
+    function verifyToCreateNewEvil() {
+        if (totalEvils > 0) {
+            setTimeout(function() {
+                createNewEvil();
+                evilCounter ++;
+            }, getRandomNumber(3000));
+
+        } else {
+            setTimeout(function() {
+                saveFinalScore();
+                congratulations = true;
+            }, 2000);
+
+        }
+    }
+//funcion ccrear nuevo malo
+    function createNewEvil() {
+        if (totalEvils != 1) {
+            evil = new Evil(evilLife + evilCounter - 1, evilShots + evilCounter - 1);
+        } else {
+            evil = new FinalBoss();
+        }
+    }
+ // funcion golpear jugador malo
+    function isEvilHittingPlayer() {
+        return ( ( (evil.posY + evil.image.height) > player.posY && (player.posY + player.height) >= evil.posY ) &&
+            ((player.posX >= evil.posX && player.posX <= (evil.posX + evil.image.width)) ||
+                (player.posX + player.width >= evil.posX && (player.posX + player.width) <= (evil.posX + evil.image.width))));
+    }
+  /// funcion comprobar colisiones
+    function checkCollisions(shot) {
+        if (shot.isHittingEvil()) {
+            if (evil.life > 1) {
+                evil.life--;
+            } else {
+                evil.kill();
+                player.score += evil.pointsToKill;
+            }
+            shot.deleteShot(parseInt(shot.identifier));
+            return false;
+        }
+        return true;
+    }
+
+    function playerAction() {
+        player.doAnything();
+    }
+
+    function addListener(element, type, expression, bubbling) {
+        bubbling = bubbling || false;
+
+        if (window.addEventListener) { // Standard
+            element.addEventListener(type, expression, bubbling);
+        } else if (window.attachEvent) { // IE
+            element.attachEvent('on' + type, expression);
+        }
+    }
+
+    function keyDown(e) {
+        var key = (window.event ? e.keyCode : e.which);
+        for (var inkey in keyMap) {
+            if (key === keyMap[inkey]) {
+                e.preventDefault();
+                keyPressed[inkey] = true;
+            }
+        }
+    }
+
+    function keyUp(e) {
+        var key = (window.event ? e.keyCode : e.which);
+        for (var inkey in keyMap) {
+            if (key === keyMap[inkey]) {
+                e.preventDefault();
+                keyPressed[inkey] = false;
+            }
+        }
+    }
+
+    function draw() {
+        ctx.drawImage(buffer, 0, 0);
+    }
+       // funcion mostrar juego terminado
+    function showGameOver() {
+        bufferctx.fillStyle="rgb(255,0,0)";
+        bufferctx.font="bold 35px Arial";
+        bufferctx.fillText("GAME OVER", canvas.width / 2 - 100, canvas.height / 2);
+    }
+/// funcion mostrar Felicitaciones
+    function showCongratulations () {
+        bufferctx.fillStyle="rgb(204,50,153)";
+        bufferctx.font="bold 22px Arial";
+        bufferctx.fillText("Enhorabuena, te has pasado el juego!", canvas.width / 2 - 200, canvas.height / 2 - 30);
+        bufferctx.fillText("PUNTOS: " + player.score, canvas.width / 2 - 200, canvas.height / 2);
+        bufferctx.fillText("VIDAS: " + player.life + " x 5", canvas.width / 2 - 200, canvas.height / 2 + 30);
+        bufferctx.fillText("PUNTUACION TOTAL: " + getTotalScore(), canvas.width / 2 - 200, canvas.height / 2 + 60);
+    }
+	// funcion obtener puntuación total
+
+    function getTotalScore() {
+        return player.score + player.life * 5;
+    }
+// funcion ctualizar
+    function update() {
+
+        drawBackground();
+
+        if (congratulations) {
+            showCongratulations();
+            return;
+        }
+
+        if (youLoose) {
+            showGameOver();
+            return;
+        }
+
+        bufferctx.drawImage(player, player.posX, player.posY);
+        bufferctx.drawImage(evil.image, evil.posX, evil.posY);
+
+        updateEvil();
+
+        for (var j = 0; j < playerShotsBuffer.length; j++) {
+            var disparoBueno = playerShotsBuffer[j];
+            updatePlayerShot(disparoBueno, j);
+        }
+
+        if (isEvilHittingPlayer()) {
+            player.killPlayer();
+        } else {
+            for (var i = 0; i < evilShotsBuffer.length; i++) {
+                var evilShot = evilShotsBuffer[i];
+                updateEvilShot(evilShot, i);
+            }
+        }
+
+        showLifeAndScore();
+
+        playerAction();
+    }
+                  /// funcion actualización del disparo del  Jugador
+    function updatePlayerShot(playerShot, id) {
+        if (playerShot) {
+            playerShot.identifier = id;
+            if (checkCollisions(playerShot)) {
+                if (playerShot.posY > 0) {
+                    playerShot.posY -= playerShot.speed;
+                    bufferctx.drawImage(playerShot.image, playerShot.posX, playerShot.posY);
+                } else {
+                    playerShot.deleteShot(parseInt(playerShot.identifier));
+                }
+            }
+        }
+    }
+
+    function updateEvilShot(evilShot, id) {
+        if (evilShot) {
+            evilShot.identifier = id;
+            if (!evilShot.isHittingPlayer()) {
+                if (evilShot.posY <= canvas.height) {
+                    evilShot.posY += evilShot.speed;
+                    bufferctx.drawImage(evilShot.image, evilShot.posX, evilShot.posY);
+                } else {
+                    evilShot.deleteShot(parseInt(evilShot.identifier));
+                }
+            } else {
+                player.killPlayer();
+            }
+        }
+    }
+  /// funcion de actualizacion del mal disparo
+    function drawBackground() {
+        var background;
+        if (evil instanceof FinalBoss) {
+            background = bgBoss;
+        } else {
+            background = bgMain;
+        }
+        bufferctx.drawImage(background, 0, 0);
+    }
+///funcon actualizar el mal
+    function updateEvil() {
+        if (!evil.dead) {
+            evil.update();
+            if (evil.isOutOfScreen()) {
+                evil.kill();
+            }
+        }
+    }
+/******************************* MEJORES PUNTUACIONES (LOCALSTORAGE) *******************************/
+    function saveFinalScore() {
+        localStorage.setItem(getFinalScoreDate(), getTotalScore());
+        showBestScores();
+        removeNoBestScores();
+    }
+// funcion obtener puntuacion final de la fecha
+    function getFinalScoreDate() {
+        var date = new Date();
+        return fillZero(date.getDay()+1)+'/'+
+            fillZero(date.getMonth()+1)+'/'+
+            date.getFullYear()+' '+
+            fillZero(date.getHours())+':'+
+            fillZero(date.getMinutes())+':'+
+            fillZero(date.getSeconds());
+    }
+               // funcion llenar cero
+    function fillZero(number) {
+        if (number < 10) {
+            return '0' + number;
+        }
+        return number;
+    }
+   //funcion obtener obtener mejor puntaje llaves
+    function getBestScoreKeys() {
+        var bestScores = getAllScores();
+        bestScores.sort(function (a, b) {return b - a;});
+        bestScores = bestScores.slice(0, totalBestScoresToShow);
+        var bestScoreKeys = [];
+        for (var j = 0; j < bestScores.length; j++) {
+            var score = bestScores[j];
+            for (var i = 0; i < localStorage.length; i++) {
+                var key = localStorage.key(i);
+                if (parseInt(localStorage.getItem(key)) == score) {
+                    bestScoreKeys.push(key);
+                }
+            }
+        }
+        return bestScoreKeys.slice(0, totalBestScoresToShow);
+    }
+       //// funcion obtener Otras puntuaciones
+    function getAllScores() {
+        var all = [];
+        for (var i=0; i < localStorage.length; i++) {
+            all[i] = (localStorage.getItem(localStorage.key(i)));
+        }
+        return all;
+    }
+/// funcion mostrar mejores puntajes
+    function showBestScores() {
+        var bestScores = getBestScoreKeys();
+        var bestScoresList = document.getElementById('puntuaciones');
+        if (bestScoresList) {
+            clearList(bestScoresList);
+            for (var i=0; i < bestScores.length; i++) {
+                addListElement(bestScoresList, bestScores[i], i==0?'negrita':null);
+                addListElement(bestScoresList, localStorage.getItem(bestScores[i]), i==0?'negrita':null);
+            }
+        }
+    }
+// funcion limpiar lista
+    function clearList(list) {
+        list.innerHTML = '';
+        addListElement(list, "Fecha");
+        addListElement(list, "Puntos");
+    }
+
+    function addListElement(list, content, className) {
+        var element = document.createElement('li');
+        if (className) {
+            element.setAttribute("class", className);
+        }
+        element.innerHTML = content;
+        list.appendChild(element);
+    }
+
+    // extendemos el objeto array con un metodo "containsElement"
+    Array.prototype.containsElement = function(element) {
+        for (var i = 0; i < this.length; i++) {
+            if (this[i] == element) {
+                return true;
+            }
+        }
+        return false;
+    };
+    // funcion eliminar mejores puntajes
+    function removeNoBestScores() {
+        var scoresToRemove = [];
+        var bestScoreKeys = getBestScoreKeys();
+        for (var i=0; i < localStorage.length; i++) {
+            var key = localStorage.key(i);
+            if (!bestScoreKeys.containsElement(key)) {
+                scoresToRemove.push(key);
+            }
+        }
+        for (var j = 0; j < scoresToRemove.length; j++) {
+            var scoreToRemoveKey = scoresToRemove[j];
+            localStorage.removeItem(scoreToRemoveKey);
+        }
+    }
+    /******************************* FIN MEJORES PUNTUACIONES *******************************/
+	
 	
 	////////////terminacion de var game fuction
 	return {
