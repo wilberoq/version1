@@ -22,33 +22,33 @@ var game = (function () {
 
     // Variables globales a la aplicacion con canvas
     var canvas,
-        ctx,
-        buffer,
-        bufferctx,
-        player,
-        evil,
-        playerShot,
-        bgMain,
-        bgBoss,
-        evilSpeed = 1,
-        totalEvils = 7,
-        playerLife = 3,
-        shotSpeed = 5,
+        ctx, //
+        buffer,  //
+        bufferctx, //
+        player, // JUGADOR
+        evil, // MAL
+        playerShot, //  Disparo jugador
+        bgMain, // BG PRINCIPAL
+        bgBoss,// BG JEFE
+        evilSpeed = 1, //VELOCIDAD DEL MALO
+        totalEvils = 7, //TOTAL DE MALOS SON 7
+        playerLife = 3, /// VIDAS DEL JUGADOR AL INICIO
+        shotSpeed = 5,  //VELOCIDAD DEL DISPARO
         playerSpeed = 5,
-        evilCounter = 0,
-        youLoose = false,
-        congratulations = false,
-        minHorizontalOffset = 100,
-        maxHorizontalOffset = 400,
+        evilCounter = 0, //REPRODUCTOR DE VELOCIDAD
+        youLoose = false, // tú pierdes =FALSO
+        congratulations = false, //FELICITACIONES = FALCE
+        minHorizontalOffset = 100, // EL MINOMO DESPLASAMIENTO HORIZONTAL
+        maxHorizontalOffset = 400,  // MAXIMO DESPLAZAMIENTO HORIZONTAL
         evilShots = 5,   // disparos que tiene el malo al principio
         evilLife = 3,    // vidas que tiene el malo al principio (se van incrementando)
-        finalBossShots = 30,
-        finalBossLife = 12,
+        finalBossShots = 30, //DISPAROS FINALES DEL JEFE
+        finalBossLife = 12, // Vida  del Jefe de Jefes
         totalBestScoresToShow = 5, // las mejores puntuaciones que se mostraran
-        playerShotsBuffer = [],
-        evilShotsBuffer = [],
-        evilShotImage,
-        playerShotImage,
+        playerShotsBuffer = [], //  el disparo de juugador 
+        evilShotsBuffer = [],// disparo del jugador malo
+        evilShotImage,  // mal disparo  al imagen
+        playerShotImage, // disparo dejugador
         playerKilledImage,
         evilImages = {
             animation : [],
@@ -67,7 +67,7 @@ var game = (function () {
             fire: 32     // tecla espacio
         },
         nextPlayerShot = 0,  // siguiente Disparo jugador
-        playerShotDelay = 250,  //jugador Disparo Retardo
+        playerShotDelay = 250,  //el retraso del disparo del jugaor 
         now = 0;
 
     function loop() {
@@ -81,7 +81,7 @@ var game = (function () {
             evilImages.animation[i-1] = evilImage;
             var bossImage = new Image();
             bossImage.src = 'images/jefe' + i + '.png';
-            bossImages.animation[i-1] = bossImage; // jefe imagen animacio = jefe imagen 
+            bossImages.animation[i-1] = bossImage; // jefe imagen animacion = jefe imagen 
         }
         evilImages.killed.src = 'images/malo_muerto.png';
         bossImages.killed.src = 'images/jefe_muerto.png';
@@ -146,6 +146,7 @@ var game = (function () {
             marginBottom : 10,
             defaultHeight : 66
         };
+		
         player = new Image();
         player.src = 'images/bueno.png'; // imagen del nave bueno
         player.posX = (canvas.width / 2) - (player.width / 2);

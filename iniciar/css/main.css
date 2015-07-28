@@ -1,15 +1,15 @@
 body {
-    background: #999;
-    color: #333;
+    background: #09f;
+    color: #C00;
     font: 16px 'Arial',sans-serif;
     text-align: center;
 }
 a {
-    color: #506e2f;
+    color: #0F0;
     text-decoration: none;
 }
 a:hover {
-    color: #ff4500;
+    color: #906;
 }
 div.contenedor {
     width: 100%;

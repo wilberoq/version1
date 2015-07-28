@@ -152,12 +152,13 @@ footer a, footer a:hover {
 
 /* styling for the slideshow on the homepage */
 ul.slideshow {
-  width: 950px;
-  height: 450px;
-  overflow: hidden;
-  position: relative;
-  margin: 0;
-  padding: 0;}
+	width: 950px;
+	height: 250px;
+	overflow: hidden;
+	position: relative;
+	margin: 0;
+	padding: 0;
+}
   
 ul.slideshow li {
   position: absolute;
@@ -251,11 +252,13 @@ ul img {
   width: 475px;}
 
 .blog {
-  background: url(../images/calendar.png) no-repeat;
-  width: 54px;
-  height: 46px;
-  float: left;
-  margin: 0 15px 0 0;}
+	background: url(../images/calendar.png) no-repeat;
+	width: 54px;
+	height: 46px;
+	float: left;
+	margin: 0 15px 0 0;
+	font-family: "MS Serif", "New York", serif;
+}
 
 .blog h2 {
   font: bold 90% arial, sans-serif;
